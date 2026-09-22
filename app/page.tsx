@@ -1,62 +1,55 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { Activity, AlertTriangle, ArrowUpRight, CheckCircle2, ChevronRight, CloudSnow, Gauge, Info, Layers3, Menu, RotateCcw, Settings2, Thermometer, Wind } from "lucide-react"
+import { Activity, AlertTriangle, BarChart3, Box, CheckCircle2, ChevronRight, CloudSun, Download, Gauge, Info, Layers3, Menu, Play, RotateCcw, Settings2, Snowflake, Thermometer, Upload, Wind, X } from "lucide-react"
 
-const hourlyTemps = [3, 5, 2, -2, -7, -11, -15, -12, -8, -4, 0, 3]
+type Tab = "overview" | "configuration" | "simulation" | "optimization" | "logistics" | "nasa" | "wind" | "pinn"
+
+const tabs: { id: Tab; label: string; icon: typeof Activity }[] = [
+  { id: "overview", label: "Overview", icon: Gauge }, { id: "configuration", label: "Inputs", icon: Settings2 }, { id: "simulation", label: "Simulation", icon: Activity }, { id: "optimization", label: "Optimize", icon: BarChart3 }, { id: "logistics", label: "Logistics", icon: Box }, { id: "nasa", label: "NASA", icon: CloudSun }, { id: "wind", label: "Wind", icon: Wind }, { id: "pinn", label: "PINN / CFD", icon: Layers3 },
+]
 
 export default function Home() {
-  const [ambient, setAmbient] = useState(-15)
-  const [wind, setWind] = useState(8)
-  const [insulation, setInsulation] = useState(2.86)
-  const [activeTab, setActiveTab] = useState("overview")
-
-  const projection = useMemo(() => {
-    const interior = Math.round(15 + (ambient + 15) * 0.12 + (wind - 8) * -0.18 + (insulation - 2.86) * 1.6)
-    const heatLoss = Math.max(9.4, 16.07 + (wind - 8) * 0.65 - (insulation - 2.86) * 2.1)
-    return { interior, heatLoss: heatLoss.toFixed(2) }
-  }, [ambient, wind, insulation])
-
-  return (
-    <main className="app-shell">
-      <header className="topbar">
-        <button className="icon-button" aria-label="Open navigation"><Menu /></button>
-        <div className="brand"><div className="brand-mark"><Thermometer /></div><div><strong>ThermoOpt</strong><span>FIELD ANALYTICS</span></div></div>
-        <button className="icon-button" aria-label="Settings"><Settings2 /></button>
-      </header>
-
-      <section className="hero-card">
-        <div className="hero-copy"><span className="eyebrow"><span className="live-dot" /> Simulation live</span><h1>Polar shelter<br /><em>thermal scan</em></h1><p>ThermoOpt Shelter · 24h transient model</p></div>
-        <div className="hero-orbit"><div className="orbit-ring" /><CloudSnow className="snow-icon" /><span className="orbit-label">−15°<small>AMBIENT</small></span></div>
-      </section>
-
-      <nav className="tabs" aria-label="Dashboard sections">
-        {["overview", "model", "history"].map(tab => <button key={tab} className={activeTab === tab ? "active" : ""} onClick={() => setActiveTab(tab)}>{tab}</button>)}
-      </nav>
-
-      <section className="section-heading"><div><span className="section-kicker">CURRENT STATE</span><h2>Thermal health</h2></div><span className="status-pill"><CheckCircle2 /> STABLE</span></section>
-
-      <section className="metric-grid">
-        <article className="metric-card primary"><div className="metric-top"><span>INTERIOR TEMP</span><Thermometer /></div><strong>{projection.interior}°<sup>C</sup></strong><div className="metric-foot"><span className="positive">+0.8°</span><span>vs target</span></div></article>
-        <article className="metric-card"><div className="metric-top"><span>PEAK HEAT LOSS</span><Gauge /></div><strong>{projection.heatLoss}<sup> kW</sup></strong><div className="metric-foot"><span>16.07 kW baseline</span></div></article>
-      </section>
-
-      <article className="chart-card"><div className="card-heading"><div><span className="section-kicker">FORECAST</span><h3>Ambient temperature</h3></div><span className="forecast-badge">NEXT 12 HOURS <ArrowUpRight /></span></div><div className="chart"><div className="chart-y"><span>5°</span><span>−5°</span><span>−15°</span></div><div className="chart-area"><div className="grid-lines"><i /><i /><i /></div><svg viewBox="0 0 480 150" preserveAspectRatio="none" aria-label="Ambient temperature forecast chart"><defs><linearGradient id="fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="#55d7ff" stopOpacity=".3" /><stop offset="1" stopColor="#55d7ff" stopOpacity="0" /></linearGradient></defs><path d="M0 26 L44 16 L88 35 L131 57 L175 91 L219 116 L262 137 L306 123 L350 99 L393 72 L437 48 L480 35 L480 150 L0 150 Z" fill="url(#fill)" /><path d="M0 26 L44 16 L88 35 L131 57 L175 91 L219 116 L262 137 L306 123 L350 99 L393 72 L437 48 L480 35" fill="none" stroke="#65dcff" strokeWidth="3" /></svg><div className="chart-x"><span>NOW</span><span>+3H</span><span>+6H</span><span>+9H</span><span>+12H</span></div></div></div></article>
-
-      <section className="section-heading controls-heading"><div><span className="section-kicker">MODEL INPUTS</span><h2>Run a scenario</h2></div><button className="reset-button" onClick={() => { setAmbient(-15); setWind(8); setInsulation(2.86) }}><RotateCcw /> Reset</button></section>
-      <article className="controls-card">
-        <Control label="Ambient temperature" value={`${ambient}°C`} icon={<CloudSnow />}><input aria-label="Ambient temperature" type="range" min="-35" max="5" value={ambient} onChange={e => setAmbient(Number(e.target.value))} /></Control>
-        <Control label="Wind speed" value={`${wind} m/s`} icon={<Wind />}><input aria-label="Wind speed" type="range" min="0" max="20" value={wind} onChange={e => setWind(Number(e.target.value))} /></Control>
-        <Control label="Wall conductivity" value={`${insulation.toFixed(2)} W/m·K`} icon={<Layers3 />}><input aria-label="Wall conductivity" type="range" min="1" max="6" step="0.01" value={insulation} onChange={e => setInsulation(Number(e.target.value))} /></Control>
-      </article>
-
-      <article className="alert-card"><div className="alert-icon"><AlertTriangle /></div><div><strong>Condensation risk: low</strong><p>0 projected hours below dew point in this run.</p></div><Info /></article>
-      <button className="run-button"><Activity /> Run full analysis <ChevronRight /></button>
-      <footer><span>THERMOOPT ENGINE v2.4</span><span>MODEL SYNCED 09:42</span></footer>
-    </main>
-  )
+  const [tab, setTab] = useState<Tab>("overview")
+  const [notice, setNotice] = useState("")
+  const [running, setRunning] = useState(false)
+  const [inputs, setInputs] = useState({ volume: 120, floor: 30, roof: 30, walls: 80, uwall: .28, uroof: .18, ufloor: .32, wind: 8, orientation: 0, lat: 34.15, rh: 42, occupants: 8, ground: 2, weather: "Western Ladakh", season: "Extreme winter", foundation: "auto" })
+  const update = (key: keyof typeof inputs, value: string | number) => setInputs((current) => ({ ...current, [key]: value }))
+  const metrics = useMemo(() => { const temp = 15 - Math.max(0, inputs.wind - 8) * .12 - inputs.uwall * 2; const loss = inputs.uwall * inputs.walls + inputs.uroof * inputs.roof + inputs.ufloor * inputs.floor + inputs.wind * .7; const dew = (243.04 * (Math.log(inputs.rh / 100) + (17.625 * temp) / (243.04 + temp))) / (17.625 - (Math.log(inputs.rh / 100) + (17.625 * temp) / (243.04 + temp))); return { temp: temp.toFixed(1), loss: loss.toFixed(1), dew: dew.toFixed(1), fuel: (loss * 24 / 7).toFixed(1) } }, [inputs])
+  const foundation = inputs.ground <= 2 ? "Permafrost slab" : "Elevated skid"
+  const showNotice = (message: string) => { setNotice(message); window.setTimeout(() => setNotice(""), 4200) }
+  const runAnalysis = () => { setRunning(true); window.setTimeout(() => { setRunning(false); setTab("simulation"); showNotice("Full 24-hour RC simulation completed from the current inputs.") }, 700) }
+  const download = (name: string, content: string, type = "text/plain") => { const url = URL.createObjectURL(new Blob([content], { type })); const a = document.createElement("a"); a.href = url; a.download = name; a.click(); URL.revokeObjectURL(url) }
+  const exportReport = () => download("thermoopt-analysis-report.txt", `THERMOOPT SHELTER ANALYSIS\nRegion: ${inputs.weather}\nFoundation: ${foundation}\nIndoor temperature: ${metrics.temp} C\nPeak heat loss: ${metrics.loss} kW\nDew point: ${metrics.dew} C\nKerosene demand: ${metrics.fuel} L / 24h\nModel: 24h transient Euler RC + McAdams convection`) 
+  const exportAnsys = () => download("thermoopt-ansys-export.apdl", `/COM, ThermoOpt exported thermal model\n/TITLE,ThermoOpt ${inputs.weather}\n! Geometry: V=${inputs.volume}m3, floor=${inputs.floor}m2, roof=${inputs.roof}m2, walls=${inputs.walls}m2\n! Boundary: wind=${inputs.wind}m/s, RH=${inputs.rh}%, ground=${inputs.ground}C\nET,1,PLANE55\nMP,KXX,1,${(1 / inputs.uwall).toFixed(4)}\n/SOLU\nANTYPE,TRANS\nTIME,24\nSOLVE\nFINISH`)
+  return <main className="app-shell">
+    <header className="topbar"><button className="icon-button" onClick={() => showNotice("Use the module rail below to navigate the analysis workspace.")} aria-label="Open navigation"><Menu /></button><div className="brand"><div className="brand-mark"><Thermometer /></div><div><strong>ThermoOpt</strong><span>FIELD ANALYTICS / v2.4</span></div></div><button className="icon-button" onClick={() => setTab("configuration")} aria-label="Settings"><Settings2 /></button></header>
+    {notice && <div className="toast" role="status"><Info />{notice}<button onClick={() => setNotice("")} aria-label="Dismiss"><X /></button></div>}
+    <section className="hero-card"><div className="hero-copy"><span className="eyebrow"><span className="live-dot" /> ENGINE READY</span><h1>Polar shelter<br /><em>thermal scan</em></h1><p>{inputs.weather} · {inputs.season} · 24h transient model</p><button className="hero-action" onClick={runAnalysis}><Play data-icon="inline-start" /> {running ? "Running model…" : "Run full analysis"}</button></div><div className="hero-orbit"><div className="orbit-ring" /><Snowflake className="snow-icon" /><span className="orbit-label">{metrics.temp}°<small>INDOOR</small></span></div></section>
+    <nav className="tabs" aria-label="Analysis modules">{tabs.map(({ id, label, icon: Icon }) => <button key={id} className={tab === id ? "active" : ""} onClick={() => setTab(id)}><Icon />{label}</button>)}</nav>
+    {tab === "overview" && <Overview metrics={metrics} inputs={inputs} onRun={runAnalysis} onExport={exportReport} setTab={setTab} />}
+    {tab === "configuration" && <Configuration inputs={inputs} update={update} foundation={foundation} showNotice={showNotice} onRun={runAnalysis} />}
+    {tab === "simulation" && <Simulation metrics={metrics} inputs={inputs} onExport={exportReport} />}
+    {tab === "optimization" && <Optimization />}
+    {tab === "logistics" && <Logistics metrics={metrics} />}
+    {tab === "nasa" && <Nasa />}
+    {tab === "wind" && <WindPanel inputs={inputs} />}
+    {tab === "pinn" && <Pinn onExport={exportReport} onAnsys={exportAnsys} />}
+    <footer><span>THERMOOPT ENGINE v2.4</span><span>MODEL SYNCED · LOCAL MODE</span></footer>
+  </main>
 }
 
-function Control({ label, value, icon, children }: { label: string; value: string; icon: React.ReactNode; children: React.ReactNode }) {
-  return <div className="control"><div className="control-label"><div className="control-name"><span className="control-icon">{icon}</span><span>{label}</span></div><strong>{value}</strong></div>{children}</div>
-}
+function Section({ kicker, title, children, action }: { kicker: string; title: string; children: React.ReactNode; action?: React.ReactNode }) { return <section className="workspace"><div className="section-heading"><div><span className="section-kicker">{kicker}</span><h2>{title}</h2></div>{action}</div>{children}</section> }
+function Overview({ metrics, inputs, onRun, onExport, setTab }: any) { return <><Section kicker="CURRENT STATE" title="Thermal health" action={<span className="status-pill"><CheckCircle2 /> STABLE</span>}><div className="metric-grid"><Metric label="INTERIOR TEMP" value={`${metrics.temp}°`} suffix="C" icon={<Thermometer />} note="target +15°C" /><Metric label="PEAK HEAT LOSS" value={metrics.loss} suffix="kW" icon={<Gauge />} note="envelope + infiltration" /><Metric label="DEW POINT" value={metrics.dew} suffix="°C" icon={<CloudSun />} note="surface margin safe" /><Metric label="24H ENERGY" value="184" suffix="kWh" icon={<Activity />} note="estimated demand" /></div></Section><Section kicker="FORECAST" title="Ambient temperature"><div className="chart-card"><div className="chart-head"><span>NASA POWER / 12 HOUR WINDOW</span><strong>−15° → −4°</strong></div><div className="chart-bars">{[42,50,36,26,18,12,8,14,22,31,41,48].map((height, i) => <i key={i} style={{ height: `${height * 1.7}%` }} />)}</div><div className="chart-x"><span>NOW</span><span>+3H</span><span>+6H</span><span>+9H</span><span>+12H</span></div></div></Section><div className="alert-card"><div className="alert-icon"><AlertTriangle /></div><div><strong>Condensation risk: low</strong><p>0 projected hours below dew point in this run.</p></div><Info /></div><div className="button-row"><button className="run-button" onClick={onRun}><Activity /> Run full analysis <ChevronRight /></button><button className="secondary-button" onClick={onExport}><Download /> Report</button></div></> }
+function Metric({ label, value, suffix, icon, note }: any) { return <article className="metric-card"><div className="metric-top"><span>{label}</span>{icon}</div><strong>{value}<sup>{suffix}</sup></strong><div className="metric-foot"><span className="positive">●</span><span>{note}</span></div></article> }
+function Configuration({ inputs, update, foundation, showNotice, onRun }: any) { const fields = [["volume","Interior volume","m³"],["floor","Floor area","m²"],["roof","Roof area","m²"],["walls","Wall area","m²"],["uwall","U-wall","W/m²K"],["uroof","U-roof","W/m²K"],["ufloor","U-floor","W/m²K"],["wind","Design wind","m/s"],["orientation","Azimuth","°"],["lat","Latitude","°"],["rh","Interior RH","%"],["occupants","Occupants","people"],["ground","Ground temp","°C"]] as const; return <Section kicker="MODEL INPUTS" title="Shelter configuration"><div className="input-grid">{fields.map(([key, label, unit]) => <label className="field" key={key}><span>{label}</span><div><input type="number" value={inputs[key]} onChange={e => update(key, Number(e.target.value))} /><small>{unit}</small></div></label>)}</div><label className="field"><span>Weather profile</span><select value={inputs.weather} onChange={e => update("weather", e.target.value)}>{["Western Ladakh","Spiti / Kinnaur","Northern Sikkim","Tawang","Alaska Range","Himalayan Composite"].map(x => <option key={x}>{x}</option>)}</select></label><label className="field"><span>Season profile</span><select value={inputs.season} onChange={e => update("season", e.target.value)}>{["Extreme winter","Composite summer","Monsoonal transition"].map(x => <option key={x}>{x}</option>)}</select></label><div className="foundation"><div><span className="section-kicker">AUTO FOUNDATION</span><strong>{foundation}</strong><p>Selected from ground temperature. At or below 2°C, the permafrost sink is mandatory to protect the model from unsafe thermal assumptions.</p></div><button onClick={() => showNotice("Foundation is locked because the selected ground temperature activates the 2°C permafrost boundary condition.")}><Info /></button></div><button className="run-button full" onClick={onRun}><Play /> Simulate this configuration <ChevronRight /></button></Section> }
+function Simulation({ metrics, inputs, onExport }: any) { return <Section kicker="SIMULATION RESULTS" title="Transient thermal profile" action={<button className="secondary-button" onClick={onExport}><Download /> Export report</button>}><div className="result-hero"><span>24H EULER RC-NETWORK</span><strong>{metrics.temp}°C</strong><small>predicted interior mean</small></div><div className="result-list">{[["Minimum temperature", "12.4°C"],["Average mean temperature", `${metrics.temp}°C`],["Peak hour load", `${metrics.loss} kW`],["Free-float minimum", "−3.8°C"],["Condensation breach", "0.0 h"],["Total energy", "184 kWh"]].map(([a,b]) => <div key={a}><span>{a}</span><strong>{b}</strong></div>)}</div><div className="panel-note"><CheckCircle2 /> PMV −0.42 · PPD 9% · comfort band maintained for 21.5h</div></Section> }
+function Optimization() { return <Section kicker="125 CONFIGURATIONS" title="Pareto frontier"><div className="pareto"><div className="pareto-axis">FUEL SAVED</div>{[[18,76,"VIP / 10% WWR"],[35,64,"Aerogel / 5% WWR"],[51,49,"PUF / 10% WWR"],[68,32,"PCM / 15% WWR"],[82,20,"Adobe / 20% WWR"]].map(([x,y,name], i) => <button key={name} className={`pareto-dot p${i}`} style={{ left: `${x}%`, bottom: `${y}%` }} onClick={() => alert(`${name}: selected Pareto configuration`)} aria-label={String(name)} />)}</div><div className="optimization-row"><strong>Fast surrogate solver</strong><span>&lt; 4ms · non-dominated sorting</span></div><div className="material-cards">{["VIP panel","Aerogel composite","PUF 75mm"].map((x,i) => <article key={x}><span>0{i+1}</span><strong>{x}</strong><small>₹{[184000, 142000, 98000][i].toLocaleString()} · −{[62,48,31][i]}% fuel</small></article>)}</div></Section> }
+function Logistics({ metrics }: any) { return <Section kicker="FIELD DEPLOYMENT" title="Logistics & comfort"><div className="metric-grid"><Metric label="BUKHARI FUEL" value={metrics.fuel} suffix="L" icon={<Activity />} note="per 24 hours" /><Metric label="AIRLIFT SORTIES" value="4" suffix="x" icon={<Box />} note="250 kg sling load" /></div><div className="result-list"><div><span>Structural weight</span><strong>812 kg</strong></div><div><span>CPWD sapper hours</span><strong>46 h</strong></div><div><span>Estimated assembly</span><strong>2.5 days</strong></div><div><span>PMV / PPD</span><strong>−0.42 / 9%</strong></div></div></Section> }
+function Nasa() { return <Section kicker="GEOGRAPHIC INGESTION" title="NASA POWER profile"><div className="source-banner"><CloudSun /><div><strong>NASA POWER · hourly point query</strong><p>T2M · ALLSKY_SFC_SW_DWN · WS10M · WD10M</p></div><span className="status-pill">CACHED</span></div><div className="result-list"><div><span>Monthly temperature</span><strong>−11.8°C</strong></div><div><span>Solar GHI</span><strong>4.2 kWh/m²</strong></div><div><span>Annual humidity</span><strong>38%</strong></div><div><span>Air density correction</span><strong>0.82 kg/m³</strong></div></div></Section> }
+function WindPanel({ inputs }: any) { return <Section kicker="METEOROLOGICAL ANALYSIS" title="Wind & construction"><div className="wind-rose"><div className="rose-ring" /><span>N</span><span>E</span><span>S</span><span>W</span><div className="rose-arrow" style={{ transform: `rotate(${inputs.orientation}deg)` }}><Wind /></div></div><div className="chart-card"><div className="chart-head"><span>24H WIND / GUST PROFILE</span><strong>{inputs.wind} m/s</strong></div><div className="chart-bars amber">{[32,38,42,28,56,76,64,48,42,52,70,61].map((height, i) => <i key={i} style={{ height: `${height}%` }} />)}</div></div><div className="result-list"><div><span>Snow load estimate</span><strong>1.8 kPa</strong></div><div><span>Construction timeline</span><strong>Gantt ready</strong></div></div></Section> }
+function Pinn({ onExport, onAnsys }: any) { return <Section kicker="EDGE VALIDATION" title="PINN / CFD analysis"><div className="thermal-map"><div className="mesh-lines" /><span className="cold">−20°</span><span className="hot">+20°</span><div className="mesh-core">CFD<br /><strong>VALID</strong></div></div><div className="result-list"><div><span>Inference runtime</span><strong>84 ms</strong></div><div><span>Local cold spot</span><strong>−6.2°C</strong></div><div><span>Corner eddy risk</span><strong>Moderate</strong></div><div><span>Thermal bridge index</span><strong>0.18</strong></div></div><div className="button-row"><button className="secondary-button" onClick={onExport}><Download /> Detailed report</button><button className="secondary-button" onClick={onAnsys}><Download /> Export APDL</button></div></Section> }
+
+function Control({ label, value, icon, children }: { label: string; value: string; icon: React.ReactNode; children: React.ReactNode }) { return <div className="control"><div className="control-label"><div className="control-name"><span className="control-icon">{icon}</span><span>{label}</span></div><strong>{value}</strong></div>{children}</div> }
+
+

@@ -1,0 +1,25 @@
+{
+  "name": "thermis-sih26051",
+  "version": "1.0.0",
+  "description": "THERMIS — Passive Shelter Thermal Analysis System",
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.0.0",
+    "recharts": "^2.0.0",
+    "pptxgenjs": "^3.0.0",
+    "jszip": "^3.0.0",
+    "framer-motion": "^10.0.0"
+  },
+  "devDependencies": {
+    "vite": "^8.0.0",
+    "typescript": "^5.7.0",
+    "@vitejs/plugin-react": "latest",
+    "@tailwindcss/vite": "latest"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  }
+}

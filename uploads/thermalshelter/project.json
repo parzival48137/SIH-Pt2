@@ -1,0 +1,24 @@
+{
+  "overview": "A mobile-first thermal engineering workbench for high-altitude military shelters that pulls live climate data, decomposes shelter geometry, simulates 24-hour heat loss, and returns a cost-versus-fuel design verdict.",
+  "features": [
+    "Pick a high-altitude sector or coordinates and pull live NASA POWER weather plus elevation",
+    "Compute altitude-corrected air density for thin-air sites",
+    "Upload STL or OBJ shelter models and get floor, roof, and wall areas with interior volume",
+    "Run a 24-hour transient thermal simulation with wind, solar, infiltration, and permafrost effects",
+    "Get a dew-point breach alert when condensation risk appears",
+    "Explore a 125-configuration Pareto front trading cost against kerosene burn",
+    "Read operational verdicts: kerosene litres per day, comfort index, structural weight, airlift sorties, and sapper man-hours",
+    "Save and reopen analyses, and export a shareable report",
+    "Works offline with pre-compiled seasonal climate profiles for four sectors"
+  ],
+  "category": "engineering-tool",
+  "tags": [
+    "thermal-engineering",
+    "simulation",
+    "military-logistics",
+    "climate-data",
+    "3d-cad",
+    "optimization"
+  ],
+  "last_updated": "2026-09-22T13:34:48.574Z"
+}

@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------
+   Bundled fonts
+   --------------------------------------------------------------- */
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("/assets/fonts/SpaceGrotesk.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Sans";
+  src: url("/assets/fonts/DMSans.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/assets/fonts/JetBrainsMono.woff2") format("woff2");
+  font-display: swap;
+}
+
+@layer base {
+  /* -------------------------------------------------------------
+     SITREP — field-instrument dark theme (primary, mobile-first)
+     ------------------------------------------------------------- */
+  :root {
+    --font-display: "Space Grotesk";
+    --font-body: "DM Sans";
+    --font-mono: "JetBrains Mono";
+    --radius: 0.25rem;
+
+    /* Cold night instrument surfaces */
+    --background: 0.17 0.014 250;
+    --foreground: 0.96 0.006 250;
+    --card: 0.215 0.016 250;
+    --card-foreground: 0.96 0.006 250;
+    --popover: 0.245 0.018 250;
+    --popover-foreground: 0.96 0.006 250;
+
+    /* Primary = instrument cyan (readouts, active states) */
+    --primary: 0.78 0.13 205;
+    --primary-foreground: 0.17 0.02 250;
+
+    --secondary: 0.27 0.018 250;
+    --secondary-foreground: 0.9 0.008 250;
+    --muted: 0.26 0.014 250;
+    --muted-foreground: 0.68 0.012 250;
+
+    /* Accent = thermal warm end (target lines, active heat) */
+    --accent: 0.79 0.15 72;
+    --accent-foreground: 0.17 0.02 250;
+
+    --destructive: 0.62 0.21 27;
+    --destructive-foreground: 0.98 0.005 250;
+
+    --success: 0.76 0.16 152;
+    --success-foreground: 0.17 0.02 250;
+    --warning: 0.82 0.15 88;
+    --warning-foreground: 0.17 0.02 250;
+
+    --border: 0.31 0.016 250;
+    --input: 0.33 0.018 250;
+    --ring: 0.78 0.13 205;
+
+    /* Thermal ramp — cold to warm, used for scales + charts */
+    --thermal-1: 0.42 0.15 262;
+    --thermal-2: 0.62 0.13 235;
+    --thermal-3: 0.75 0.12 205;
+    --thermal-4: 0.79 0.14 165;
+    --thermal-5: 0.85 0.16 115;
+    --thermal-6: 0.85 0.16 88;
+    --thermal-7: 0.75 0.18 55;
+    --thermal-8: 0.63 0.21 30;
+
+    --chart-1: 0.75 0.12 205;
+    --chart-2: 0.79 0.15 72;
+    --chart-3: 0.62 0.13 235;
+    --chart-4: 0.76 0.16 152;
+    --chart-5: 0.63 0.21 30;
+
+    --sidebar: 0.2 0.016 250;
+    --sidebar-foreground: 0.95 0.006 250;
+    --sidebar-primary: 0.78 0.13 205;
+    --sidebar-primary-foreground: 0.17 0.02 250;
+    --sidebar-accent: 0.27 0.018 250;
+    --sidebar-accent-foreground: 0.9 0.008 250;
+    --sidebar-border: 0.31 0.016 250;
+    --sidebar-ring: 0.78 0.13 205;
+
+    /* Reusable surface + motion tokens */
+    --gradient-subtle: linear-gradient(
+      180deg,
+      oklch(0.235 0.018 250) 0%,
+      oklch(0.2 0.014 250) 100%
+    );
+    --shadow-panel: 0 1px 0 0 oklch(0.34 0.016 250 / 0.55) inset, 0 1px 2px 0
+      oklch(0.1 0.01 250 / 0.6);
+    --transition-smooth: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* -------------------------------------------------------------
+     Snow-glare light mode — high altitude daylight
+     ------------------------------------------------------------- */
+  .light {
+    --background: 0.97 0.004 250;
+    --foreground: 0.2 0.02 250;
+    --card: 1 0 0;
+    --card-foreground: 0.2 0.02 250;
+    --popover: 1 0 0;
+    --popover-foreground: 0.2 0.02 250;
+
+    --primary: 0.48 0.11 235;
+    --primary-foreground: 0.99 0 0;
+
+    --secondary: 0.93 0.006 250;
+    --secondary-foreground: 0.28 0.02 250;
+    --muted: 0.93 0.006 250;
+    --muted-foreground: 0.46 0.016 250;
+
+    --accent: 0.6 0.15 55;
+    --accent-foreground: 0.99 0 0;
+
+    --destructive: 0.52 0.21 27;
+    --destructive-foreground: 0.99 0 0;
+    --success: 0.5 0.14 152;
+    --success-foreground: 0.99 0 0;
+    --warning: 0.62 0.14 78;
+    --warning-foreground: 0.16 0.02 250;
+
+    --border: 0.87 0.008 250;
+    --input: 0.85 0.008 250;
+    --ring: 0.48 0.11 235;
+
+    --chart-1: 0.5 0.11 235;
+    --chart-2: 0.6 0.15 55;
+    --chart-3: 0.44 0.1 262;
+    --chart-4: 0.5 0.14 152;
+    --chart-5: 0.52 0.21 27;
+
+    --sidebar: 0.94 0.005 250;
+    --sidebar-foreground: 0.2 0.02 250;
+    --sidebar-primary: 0.48 0.11 235;
+    --sidebar-primary-foreground: 0.99 0 0;
+    --sidebar-accent: 0.9 0.006 250;
+    --sidebar-accent-foreground: 0.28 0.02 250;
+    --sidebar-border: 0.87 0.008 250;
+    --sidebar-ring: 0.48 0.11 235;
+
+    --shadow-panel: 0 1px 0 0 oklch(1 0 0 / 0.7) inset, 0 1px 2px 0
+      oklch(0.2 0.02 250 / 0.12);
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* Numeric readouts never jitter as values update */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+}
+
+@layer utilities {
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+
+  /* Instrument panel surface: flat fill + hairline top highlight */
+  .panel {
+    background: var(--gradient-subtle);
+    border: 1px solid oklch(var(--border));
+    box-shadow: var(--shadow-panel);
+  }
+
+  .surface-inset {
+    background: oklch(0.16 0.012 250);
+    border: 1px solid oklch(var(--border));
+  }
+
+  /* Thermal ramp strip — cold to warm, for scales and legends */
+  .thermal-ramp {
+    background: linear-gradient(
+      90deg,
+      oklch(var(--thermal-1)) 0%,
+      oklch(var(--thermal-2)) 14%,
+      oklch(var(--thermal-3)) 28%,
+      oklch(var(--thermal-4)) 44%,
+      oklch(var(--thermal-5)) 60%,
+      oklch(var(--thermal-6)) 74%,
+      oklch(var(--thermal-7)) 88%,
+      oklch(var(--thermal-8)) 100%
+    );
+  }
+
+  .label-tech {
+    @apply font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground;
+  }
+
+  .readout {
+    @apply font-mono tnum tabular-nums leading-none;
+  }
+}

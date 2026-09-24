@@ -1,7 +1,4 @@
 import { fileURLToPath, URL } from "url";
-import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
-import environment from "vite-plugin-environment";
 
 const ii_url =
   process.env.DFX_NETWORK === "local"
@@ -10,7 +7,7 @@ const ii_url =
 
 process.env.II_URL = process.env.II_URL || ii_url;
 
-export default defineConfig({
+export default {
   logLevel: "error",
   build: {
     emptyOutDir: true,
@@ -32,12 +29,11 @@ export default defineConfig({
       },
     },
   },
-  plugins: [
-    environment("all", { prefix: "CANISTER_" }),
-    environment("all", { prefix: "DFX_" }),
-    environment(["II_URL"]),
-    react(),
-  ],
+  define: {
+    "process.env.II_URL": JSON.stringify(process.env.II_URL),
+    "process.env.DFX_NETWORK": JSON.stringify(process.env.DFX_NETWORK),
+  },
+  plugins: [],
   resolve: {
     alias: [
       {
@@ -51,4 +47,4 @@ export default defineConfig({
     ],
     dedupe: ["@icp-sdk/core"]
   },
-});
+};
